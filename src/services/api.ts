@@ -12,7 +12,16 @@ import {
   AssetStatus,
 } from '../types';
 
-const API_BASE_URL = '/api';
+const getBaseUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (!envUrl || envUrl.trim() === '') {
+    return '/api';
+  }
+  const trimmed = envUrl.trim().replace(/\/+$/, '');
+  return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+};
+
+const API_BASE_URL = getBaseUrl();
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
