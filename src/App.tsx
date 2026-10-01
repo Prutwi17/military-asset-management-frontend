@@ -149,7 +149,7 @@ export const App: React.FC = () => {
           <Route
             path="/audit-logs"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['ADMIN']}>
                 <DashboardLayout>
                   <AuditLogsPage />
                 </DashboardLayout>
@@ -173,7 +173,7 @@ export const App: React.FC = () => {
           <Route
             path="/requisitions"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['ADMIN', 'BASE_COMMANDER', 'LOGISTICS_OFFICER']}>
                 <DashboardLayout>
                   <TacticalModule
                     title="Asset Requisitions"
@@ -187,7 +187,7 @@ export const App: React.FC = () => {
           <Route
             path="/maintenance"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['ADMIN', 'BASE_COMMANDER']}>
                 <DashboardLayout>
                   <TacticalModule
                     title="Maintenance Management"
@@ -201,7 +201,7 @@ export const App: React.FC = () => {
           <Route
             path="/reports"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['ADMIN', 'BASE_COMMANDER']}>
                 <DashboardLayout>
                   <ReportsPage />
                 </DashboardLayout>
@@ -212,7 +212,7 @@ export const App: React.FC = () => {
           <Route
             path="/personnel"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['ADMIN', 'BASE_COMMANDER']}>
                 <DashboardLayout>
                   <TacticalModule
                     title="Personnel & Assignments"
@@ -226,7 +226,7 @@ export const App: React.FC = () => {
           <Route
             path="/settings"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['ADMIN']}>
                 <DashboardLayout>
                   <TacticalModule
                     title="System Settings"

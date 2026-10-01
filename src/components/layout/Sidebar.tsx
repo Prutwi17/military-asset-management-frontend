@@ -32,10 +32,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { name: 'Transfers', to: '/transfers', icon: ArrowRightLeft },
     { name: 'Assignments & Ops', to: '/assignments', icon: Users },
     ...(user?.role === 'ADMIN' ? [{ name: 'Bases', to: '/bases', icon: Building2 }] : []),
-    { name: 'Audit Trail', to: '/audit-logs', icon: ShieldCheck },
-    { name: 'Maintenance', to: '/maintenance', icon: Wrench },
-    { name: 'Reports', to: '/reports', icon: BarChart3 },
-    { name: 'Settings', to: '/settings', icon: Settings },
+    ...(user?.role === 'ADMIN' ? [{ name: 'Audit Trail', to: '/audit-logs', icon: ShieldCheck }] : []),
+    ...(user?.role === 'ADMIN' || user?.role === 'BASE_COMMANDER'
+      ? [{ name: 'Maintenance', to: '/maintenance', icon: Wrench }]
+      : []),
+    ...(user?.role === 'ADMIN' || user?.role === 'BASE_COMMANDER'
+      ? [{ name: 'Reports', to: '/reports', icon: BarChart3 }]
+      : []),
+    ...(user?.role === 'ADMIN' ? [{ name: 'Settings', to: '/settings', icon: Settings }] : []),
   ];
 
   return (

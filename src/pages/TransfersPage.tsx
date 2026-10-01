@@ -18,6 +18,7 @@ import { transferApi, baseApi, assetApi } from '../services/api';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { Modal } from '../components/common/Modal';
+import { AssetImage } from '../components/common/AssetImage';
 import { useAuth } from '../context/AuthContext';
 
 export const TransfersPage: React.FC = () => {
@@ -247,6 +248,14 @@ export const TransfersPage: React.FC = () => {
       default:
         return 'neutral';
     }
+  };
+
+  const canApproveOrReject = (t: Transfer) => {
+    if (user?.role === 'ADMIN') return true;
+    if (user?.role === 'BASE_COMMANDER' && user?.base) {
+      return t.sourceBase.id === user.base.id || t.destinationBase.id === user.base.id;
+    }
+    return false;
   };
 
   return (
@@ -510,20 +519,24 @@ export const TransfersPage: React.FC = () => {
                         {/* Action buttons depending on status */}
                         {item.status === 'PENDING' && (
                           <>
-                            <button
-                              onClick={() => handleApprove(item.id)}
-                              title="Approve Transfer"
-                              className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors"
-                            >
-                              <Check className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => setRejectingTransferId(item.id)}
-                              title="Reject Transfer"
-                              className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
+                            {canApproveOrReject(item) && (
+                              <>
+                                <button
+                                  onClick={() => handleApprove(item.id)}
+                                  title="Approve Transfer"
+                                  className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition-colors"
+                                >
+                                  <Check className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => setRejectingTransferId(item.id)}
+                                  title="Reject Transfer"
+                                  className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </>
+                            )}
                             <button
                               onClick={() => handleCancel(item.id)}
                               title="Cancel Request"
@@ -643,9 +656,17 @@ export const TransfersPage: React.FC = () => {
               ))}
             </select>
             {selectedAsset && (
-              <p className="mt-1 text-[11px] text-blue-600 font-medium">
-                Available Stock at Origin: {selectedAsset.quantity} {selectedAsset.unit} | Category: {selectedAsset.category}
-              </p>
+              <div className="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg mt-2">
+                <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-900 border border-slate-200 shrink-0">
+                  <AssetImage src={selectedAsset.imageUrl} alt={selectedAsset.name} className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-900">{selectedAsset.name}</p>
+                  <p className="text-[11px] text-slate-500 font-mono">
+                    {selectedAsset.assetCode} • Available Stock: {selectedAsset.quantity} {selectedAsset.unit}
+                  </p>
+                </div>
+              </div>
             )}
           </div>
 

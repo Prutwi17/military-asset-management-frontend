@@ -7,6 +7,7 @@ import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { Modal } from '../components/common/Modal';
 import { AddEditAssetModal } from '../components/assets/AddEditAssetModal';
+import { AssetImage } from '../components/common/AssetImage';
 import { useAuth } from '../context/AuthContext';
 
 export const AssetsPage: React.FC = () => {
@@ -232,6 +233,7 @@ export const AssetsPage: React.FC = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/75 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="py-3 px-4 w-14">Photo</th>
                 <th className="py-3 px-4">ID</th>
                 <th className="py-3 px-4">Asset Name</th>
                 <th className="py-3 px-4">Category</th>
@@ -243,7 +245,7 @@ export const AssetsPage: React.FC = () => {
             <tbody className="divide-y divide-slate-100 text-xs sm:text-sm">
               {isLoading ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
                       <span>Loading defense asset records...</span>
@@ -252,7 +254,7 @@ export const AssetsPage: React.FC = () => {
                 </tr>
               ) : assets.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     <Shield className="w-10 h-10 mx-auto text-slate-300 mb-2" />
                     <p className="font-semibold text-slate-700">No assets match your search parameters</p>
                     <p className="text-xs text-slate-400 mt-1">Try resetting filters or registering a new asset</p>
@@ -265,6 +267,20 @@ export const AssetsPage: React.FC = () => {
                     className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
                     onClick={() => navigate(`/assets/${item.id}`)}
                   >
+                    {/* Photo Thumbnail */}
+                    <td className="py-2.5 px-4" onClick={(e) => e.stopPropagation()}>
+                      <div
+                        onClick={() => navigate(`/assets/${item.id}`)}
+                        className="w-10 h-10 rounded-lg overflow-hidden bg-slate-900 border border-slate-200 shrink-0 cursor-pointer shadow-2xs"
+                      >
+                        <AssetImage
+                          src={item.imageUrl}
+                          alt={item.name}
+                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                        />
+                      </div>
+                    </td>
+
                     {/* ID */}
                     <td className="py-3.5 px-4 font-mono font-medium text-slate-900">
                       {item.assetCode}
@@ -317,14 +333,16 @@ export const AssetsPage: React.FC = () => {
                           <Edit2 className="w-4 h-4" />
                         </button>
 
-                        {/* Delete Button */}
-                        <button
-                          onClick={() => setDeleteConfirmAsset(item)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
-                          title="Deactivate Asset"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        {/* Delete Button (Admin or Commander of Base) */}
+                        {(user?.role === 'ADMIN' || (user?.role === 'BASE_COMMANDER' && user?.base?.id === item.baseId)) && (
+                          <button
+                            onClick={() => setDeleteConfirmAsset(item)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
+                            title="Deactivate Asset"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

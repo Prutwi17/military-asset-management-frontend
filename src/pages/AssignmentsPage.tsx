@@ -27,6 +27,7 @@ import { assignmentApi, expenditureApi, baseApi, assetApi } from '../services/ap
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { Modal } from '../components/common/Modal';
+import { AssetImage } from '../components/common/AssetImage';
 import { useAuth } from '../context/AuthContext';
 
 export const AssignmentsPage: React.FC = () => {
@@ -857,9 +858,17 @@ export const AssignmentsPage: React.FC = () => {
                 ))}
               </select>
               {selectedAssignAsset && (
-                <p className="mt-1 text-[11px] text-blue-600 font-medium">
-                  Available to assign: {selectedAssignAsset.quantity} {selectedAssignAsset.unit}
-                </p>
+                <div className="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg mt-2">
+                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-900 border border-slate-200 shrink-0">
+                    <AssetImage src={selectedAssignAsset.imageUrl} alt={selectedAssignAsset.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">{selectedAssignAsset.name}</p>
+                    <p className="text-[11px] text-slate-500 font-mono">
+                      {selectedAssignAsset.assetCode} • Available: {selectedAssignAsset.quantity} {selectedAssignAsset.unit}
+                    </p>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -1098,9 +1107,17 @@ export const AssignmentsPage: React.FC = () => {
                 ))}
               </select>
               {selectedExpAsset && (
-                <p className="mt-1 text-[11px] text-amber-600 font-medium">
-                  Current Stock Available: {selectedExpAsset.quantity} {selectedExpAsset.unit}
-                </p>
+                <div className="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg mt-2">
+                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-900 border border-slate-200 shrink-0">
+                    <AssetImage src={selectedExpAsset.imageUrl} alt={selectedExpAsset.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">{selectedExpAsset.name}</p>
+                    <p className="text-[11px] text-slate-500 font-mono">
+                      {selectedExpAsset.assetCode} • Stock: {selectedExpAsset.quantity} {selectedExpAsset.unit}
+                    </p>
+                  </div>
+                </div>
               )}
             </div>
           </div>

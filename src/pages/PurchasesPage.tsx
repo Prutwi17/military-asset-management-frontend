@@ -5,6 +5,7 @@ import { purchaseApi, baseApi, assetApi } from '../services/api';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { Modal } from '../components/common/Modal';
+import { AssetImage } from '../components/common/AssetImage';
 import { useAuth } from '../context/AuthContext';
 
 export const PurchasesPage: React.FC = () => {
@@ -461,6 +462,24 @@ export const PurchasesPage: React.FC = () => {
               <p className="text-[11px] text-slate-500 mt-0.5">
                 Selecting an existing asset automatically increases its inventory balance upon receipt.
               </p>
+
+              {(() => {
+                const linkedAsset = assets.find((a) => a.id === Number(selectedAssetId));
+                if (!linkedAsset) return null;
+                return (
+                  <div className="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg mt-2">
+                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-900 border border-slate-200 shrink-0">
+                      <AssetImage src={linkedAsset.imageUrl} alt={linkedAsset.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-900">{linkedAsset.name}</p>
+                      <p className="text-[11px] text-slate-500 font-mono">
+                        {linkedAsset.assetCode} • Current Stock: {linkedAsset.quantity} {linkedAsset.unit}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
